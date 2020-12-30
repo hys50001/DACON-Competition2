@@ -54,7 +54,7 @@ model.compile(optimizer=keras.optimizers.Adam(lr = 0.01), loss='sparse_categoric
 ---------------
 
 ### 모델2. XGBoost
-Concept:  Meta Feature와 Text Based Feature로 구분지어 Feature Engineering 후 Stacking Ensemble 기법 활용
+Concept:  __Meta Feature__와 __Text Based Feature__로 구분지어 Feature Engineering 후 Stacking Ensemble 기법 활용
 
 #### STEP1: META Feature
 사용한 대표적 Meta Feature(중요도가 높았던 Feature)는 다음과 같다. 
@@ -91,3 +91,5 @@ train["first_word_id"] = train['text'].apply(lambda x: symbol_id(list(x.strip())
 train["last_word_id"] = train['text'].apply(lambda x: symbol_id(list(x.strip())[-1]))
 train['ease']=train['text'].apply(flesch_reading_ease)
 ```
+
+#### STEP2: Text Based Feature
