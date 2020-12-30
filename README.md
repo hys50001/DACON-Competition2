@@ -227,5 +227,12 @@ for dev_index, val_index in kf.split(train_X):
 
 ```
 
+#### STEP4: 결과
+![image](https://user-images.githubusercontent.com/75110162/103353149-622fc580-4aeb-11eb-8589-91f6cf7f35eb.png)
+
+0.14877 의 loss로 3등으로 대회를 마쳤다. 이는 초기 모델인 LSTM보다 훨씬 좋은 SCORE였다. Kaggle에서 왜 XGBoost 인기가 있는 모델인지 다시 한번 알 수 있었다..  
+
+그리고 운이 좋게도 1등,2등 을 하신 분들이 대회 규칙으로 인하여 수상에서 제외되고 최종 1등은 내가 되었다(운이 아주 좋았다)
+
 
 
