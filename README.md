@@ -147,4 +147,4 @@ test["tfidf_LR_2"] = pred_full_test[:,2]
 test["tfidf_LR_3"] = pred_full_test[:,3]
 test["tfidf_LR_4"] = pred_full_test[:,4]
 ```
-***TFIDF vectorizer + Logistic Regression 을 활용한 Feature Stacking ***
+**TFIDF vectorizer + Logistic Regression 을 활용한 Feature Stacking**
