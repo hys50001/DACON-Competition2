@@ -93,3 +93,10 @@ train['ease']=train['text'].apply(flesch_reading_ease)
 ```
 
 #### STEP2: Text Based Feature
+여러가지 Machine Learning Algorithm들의 결과를 Stacking 하여 loss를 줄여나갔다.
+사용한 기법은 다음과 같다.
+- LogisticRegression
+- SGDClassifier
+- RandomForestClassifier
+- MLPClassifier
+- DecisionTreeClassifier
