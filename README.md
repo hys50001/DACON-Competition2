@@ -92,7 +92,7 @@ train["last_word_id"] = train['text'].apply(lambda x: symbol_id(list(x.strip())[
 train['ease']=train['text'].apply(flesch_reading_ease)
 ```
 
-#### STEP2: Text Based Feature
+#### STEP2-1: Text Based Feature : Machine Learning
 여러가지 Machine Learning Algorithm들의 결과를 Stacking 하여 loss를 줄여나갔다.
 사용한 기법은 다음과 같다.
 
@@ -148,3 +148,41 @@ test["tfidf_LR_3"] = pred_full_test[:,3]
 test["tfidf_LR_4"] = pred_full_test[:,4]
 ```
 **TFIDF vectorizer + Logistic Regression 을 활용한 Feature Stacking**
+
+#### STEP2-2: Text Based Feature : FastText
+
+FACEBOOK 의 FastText에서 제공하는 Unsupervised Learning 을 통하여 train data set을 학습시킴
+이후, 학습된 FastText Model로 각 문장들을 임베딩하였음
+``` python
+train['text'].to_csv('sample_file.txt',index=False, header=None, sep="\t")
+model_ft = fasttext.train_unsupervised('sample_file.txt', minCount=2, minn=2, maxn=10,dim=300)
+
+def sent2vec(s):
+    words = nltk.tokenize.word_tokenize(s)
+    #words = [k.stem(w) for w in words]
+    #words = [w for w in words if not w in string.digits]
+    #words = [w for w in words if w.isalpha()]
+    M = []
+    for w in words:
+        try:
+            M.append(model_ft[w])
+        except:
+            continue
+    M = np.array(M)
+    v = M.sum(axis=0)
+    if type(v) != np.ndarray:
+        return np.zeros(300)
+    return v
+
+xtrain_ft = np.array([sent2vec(x) for x in train['text']])
+xtest_ft = np.array([sent2vec(x) for x in test['text']])
+
+train_ft=pd.DataFrame(xtrain_ft)
+train_ft.columns = ['ft_vector_'+str(i) for i in range(xtrain_ft.shape[1])]
+
+test_ft=pd.DataFrame(xtest_ft)
+test_ft.columns = ['ft_vector_'+str(i) for i in range(xtrain_ft.shape[1])]
+
+train = pd.concat([train, train_ft], axis=1)
+test = pd.concat([test, test_ft], axis=1)
+```
