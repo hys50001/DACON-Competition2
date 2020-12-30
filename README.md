@@ -40,6 +40,7 @@ model.add(LSTM(units=64 , recurrent_dropout = 0.1 , dropout = 0.1))
 model.add(Dense(units = 32 , activation = 'relu'))
 model.add(Dense(5,activation='softmax'))
 model.compile(optimizer=keras.optimizers.Adam(lr = 0.01), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-
-
 ```
+#### STEP3: 결과
+![image](https://user-images.githubusercontent.com/75110162/103349943-be8de780-4ae1-11eb-84b5-d9258a59ad48.png)
+
