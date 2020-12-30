@@ -6,5 +6,5 @@
 
 ![image](https://user-images.githubusercontent.com/75110162/103340660-fb4ce500-4ac7-11eb-80d9-666b9b1eea91.png)
 
-- 소설 작가의 문체가 주어지고 5명의 작가 중 어느 작가의 문체인지 분류 하는 _Multi-Class Classification_ 과제 
+- 소설 작가의 문체가 주어지고 5명의 작가 중 어느 작가의 문체인지 분류 하는 __Multi-Class Classification__ 과제 
 
