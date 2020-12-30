@@ -41,6 +41,7 @@ model.add(Dense(units = 32 , activation = 'relu'))
 model.add(Dense(5,activation='softmax'))
 model.compile(optimizer=keras.optimizers.Adam(lr = 0.01), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 ```
-#### STEP3: 결과
-![image](https://user-images.githubusercontent.com/75110162/103349943-be8de780-4ae1-11eb-84b5-d9258a59ad48.png)
+#### STEP3: 결과: 베이스라인 보다는 loss가 낮았지만, 모델에 layer를 추가하여 복잡하게 만들수록 과적합이 일어나 loss 점점 높아짐.. 
+![image](https://user-images.githubusercontent.com/75110162/103350053-10367200-4ae2-11eb-9f12-026e6ba3438e.png)
+
 
