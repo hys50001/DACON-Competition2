@@ -147,12 +147,13 @@ test["tfidf_LR_2"] = pred_full_test[:,2]
 test["tfidf_LR_3"] = pred_full_test[:,3]
 test["tfidf_LR_4"] = pred_full_test[:,4]
 ```
-**TFIDF vectorizer + Logistic Regression 을 활용한 Feature Stacking**
+**TFIDF vectorizer + Logistic Regression + KFold 을 활용한 Feature Stacking**
 
 #### STEP2-2: Text Based Feature : FastText
 
 FACEBOOK 의 FastText에서 제공하는 Unsupervised Learning 을 통하여 train data set을 학습시킴
-이후, 학습된 FastText Model로 각 문장들을 임베딩하였음
+이후, 학습된 FastText Model로 각 문장들을 임베딩 하였고 이를 Feature로 활용
+
 ``` python
 train['text'].to_csv('sample_file.txt',index=False, header=None, sep="\t")
 model_ft = fasttext.train_unsupervised('sample_file.txt', minCount=2, minn=2, maxn=10,dim=300)
@@ -186,3 +187,45 @@ test_ft.columns = ['ft_vector_'+str(i) for i in range(xtrain_ft.shape[1])]
 train = pd.concat([train, train_ft], axis=1)
 test = pd.concat([test, test_ft], axis=1)
 ```
+#### STEP3: XGBoost 
+총 **_430개의 Feature_** 를 Extract 하였고 XGBoost 모델로 Classification 학습했다. 
+``` python
+cols_to_drop = ['index', 'text']
+train_X = train.drop(cols_to_drop+['author'], axis=1)
+train_y=train['author']
+test_index = test['index'].values
+test_X = test.drop(cols_to_drop, axis=1)
+xgb_preds=[]
+kf = model_selection.KFold(n_splits=5, shuffle=True, random_state=2020)
+
+for dev_index, val_index in kf.split(train_X):
+    dev_X, val_X = train_X.loc[dev_index], train_X.loc[val_index]
+    dev_y, val_y = train_y[dev_index], train_y[val_index]
+    
+    dtrain = xgb.DMatrix(dev_X,label=dev_y)
+    dvalid = xgb.DMatrix(val_X, label=val_y)
+    watchlist = [(dtrain, 'train'), (dvalid, 'valid')]
+
+    param = {}
+    param['objective'] = 'multi:softprob'
+    param['eta'] = 0.1
+    param['max_depth'] = 3
+    param['silent'] = 1
+    param['num_class'] = 5
+    param['eval_metric'] = "mlogloss"
+    param['min_child_weight'] = 1
+    param['subsample'] = 0.8
+    param['colsample_bytree'] = 0.3
+    param['seed'] = 0
+    param['tree_method'] = 'gpu_hist'
+
+    model = xgb.train(param, dtrain, 2000, watchlist, early_stopping_rounds=50, verbose_eval=20)
+
+    xgtest2 = xgb.DMatrix(test_X)
+    xgb_pred = model.predict(xgtest2, ntree_limit = model.best_ntree_limit)
+    xgb_preds.append(list(xgb_pred))
+
+```
+
+
+
