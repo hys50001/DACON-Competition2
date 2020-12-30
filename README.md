@@ -57,6 +57,37 @@ model.compile(optimizer=keras.optimizers.Adam(lr = 0.01), loss='sparse_categoric
 Concept:  Meta Feature와 Text Based Feature로 구분지어 Feature Engineering 후 Stacking Ensemble 기법 활용
 
 #### STEP1: META Feature
-사용한 Meta Featur는 다음과 같다. 
+사용한 대표적 Meta Feature(중요도가 높았던 Feature)는 다음과 같다. 
 - 단어 갯수
-- 
+- 평균 단어 길이
+- 음절 갯수
+- 쉼표 사이의 음절 갯수
+- 명사 비율
+- 형용사 비율
+- 문장 난이도 (flesch_reading_ease library 활용)
+- 문장 감성 분석( nltk SentimentIntensityAnalyzer 활용)
+- POS tagging 을 통해 문장에서 등장하는 고유 명사(사람 이름 등) 중복도 
+
+``` python
+train['num_words']=train['text'].apply(lambda x:len(get_words(x)))
+train['mean_word_len']=train['text'].apply(lambda x:np.mean([len(w) for w in str(x).split()]))
+train["num_unique_words"] = train["text"].apply(lambda x: len(set(str(x).split())))
+train["num_chars"] = train["text"].apply(lambda x: len(str(x)))
+train["num_stopwords"] = train["text"].apply(lambda x: len([w for w in str(x).lower().split() if w in eng_stopwords]))
+train["num_punctuations"] =train['text'].apply(lambda x: len([c for c in str(x) if c in string.punctuation]) )
+train["num_words_upper"] = train["text"].apply(lambda x: len([w for w in str(x).split() if w.isupper()]))/train["num_words"]
+train["num_words_title"] = train["text"].apply(lambda x: len([w for w in str(x).split() if w.istitle()]))/train["num_words"]
+train["chars_between_comma"] = train["text"].apply(lambda x: np.mean([len(chunk) for chunk in str(x).split(",")]))/train["num_chars"]
+train["symbols_unknowns"]=train["text"].apply(lambda x: np.sum([not w in symbols_knowns for w in str(x)]))/train["num_chars"]
+train['noun'] = train["text"].apply(lambda x: fraction_noun(x))
+train['adj'] = train["text"].apply(lambda x: fraction_adj(x))
+train['verbs'] = train["text"].apply(lambda x: fraction_verbs(x))
+train["sentiment"]=train["text"].apply(sentiment_nltk)
+train['single_frac'] = train['text'].apply(lambda x: count_tokens(x, ['is', 'was', 'has', 'he', 'she', 'it', 'her', 'his']))/train["num_words"]
+train['plural_frac'] = train['text'].apply(lambda x: count_tokens(x, ['are', 'were', 'have', 'we', 'they']))/train["num_words"]
+train['first_word_len']=train['text'].apply(first_word_len)/train["num_chars"]
+train['last_word_len']=train['text'].apply(last_word_len)/train["num_chars"]
+train["first_word_id"] = train['text'].apply(lambda x: symbol_id(list(x.strip())[0]))
+train["last_word_id"] = train['text'].apply(lambda x: symbol_id(list(x.strip())[-1]))
+train['ease']=train['text'].apply(flesch_reading_ease)
+```
