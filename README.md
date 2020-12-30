@@ -147,9 +147,9 @@ test["tfidf_LR_2"] = pred_full_test[:,2]
 test["tfidf_LR_3"] = pred_full_test[:,3]
 test["tfidf_LR_4"] = pred_full_test[:,4]
 ```
-**TFIDF vectorizer + Logistic Regression + KFold 을 활용한 Feature Stacking**
+**_TFIDF vectorizer + Logistic Regression + KFold 을 활용한 Feature Stacking_**
 
-#### STEP2-2: Text Based Feature : FastText
+### STEP2-2: Text Based Feature : FastText
 
 FACEBOOK 의 FastText에서 제공하는 Unsupervised Learning 을 통하여 train data set을 학습시킴
 이후, 학습된 FastText Model로 각 문장들을 임베딩 하였고 이를 Feature로 활용
