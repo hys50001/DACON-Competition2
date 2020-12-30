@@ -12,7 +12,7 @@
 
 ### 모델1. ANN
 
-#### STEP1: 전처리
+#### STEP1: 전처리: 문장부호 제거 
 ``` python
 def alpha_num(text):
     return re.sub(r'[^A-Za-z0-9 ]', '', text)
