@@ -10,7 +10,7 @@
 
 --------
 
-### 모델1. ANN
+### 모델1. LSTM
 
 #### STEP1-1: 전처리: 문장부호 제거 
 ``` python
@@ -19,7 +19,7 @@ def alpha_num(text):
 
 train['text']=train['text'].apply(alpha_num)
 ```
-#### STEP1-2: 불용어 제거 
+#### STEP1-2: 불용어 제거 : nltk library 의 stopwords 이용 
 ``` python
 nltk.download('stopwords')
 eng_stopwords = set(stopwords.words("english"))
@@ -29,4 +29,17 @@ def remove_stopwords(text):
         if i.strip().lower() not in stopwords:
             final_text.append(i.strip())
     return " ".join(final_text)
+```
+
+#### STEP2: 모델링: LSTM : Keras library 이용 
+``` python
+model = Sequential()
+model.add(Embedding(len(word_index)+1, output_dim=embed_size, input_length=MAX_LEN))
+model.add(LSTM(units=128 , return_sequences = True , recurrent_dropout = 0.25 , dropout = 0.25))
+model.add(LSTM(units=64 , recurrent_dropout = 0.1 , dropout = 0.1))
+model.add(Dense(units = 32 , activation = 'relu'))
+model.add(Dense(5,activation='softmax'))
+model.compile(optimizer=keras.optimizers.Adam(lr = 0.01), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+
 ```
