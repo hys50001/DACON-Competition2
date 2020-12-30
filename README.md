@@ -234,5 +234,11 @@ for dev_index, val_index in kf.split(train_X):
 
 그리고 운이 좋게도 1등,2등 을 하신 분들이 대회 규칙으로 인하여 수상에서 제외되고 3등인 내가 최종 1등이 되었다. 
 
+![image](https://user-images.githubusercontent.com/75110162/103353628-a66f9580-4aec-11eb-90c6-d206296f9b89.png)
 
+
+#### SELF 피드백 
+
+- 전처리를 안하는 쪽이 loss를 줄여나가는 데에 분명 도움이 되었다. 그러나 아예 안하는 것은 최선은 아니었을 것 같다. 너무 모델링에만 집중한 것은 아니었을까
+- XGBoost 의 Feature로 Neural Network Model을 사용하지 않았다. 다른 수상자 분들의 코드는 CNN이나 LSTM을 Stacking 했을 때 Feature Importance가 높았다. 
 
