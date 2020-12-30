@@ -46,3 +46,11 @@ model.compile(optimizer=keras.optimizers.Adam(lr = 0.01), loss='sparse_categoric
 
 베이스라인 보다는 loss가 낮았지만, 모델에 layer를 추가하여 복잡하게 만들수록 과적합이 일어나 loss 점점 높아짐..
 
+#### 원인분석
+- 문장 부호를 제거하는 전처리를 진행하면 작가 고유의 특성이 사라지게됨 
+- stopwords 역시 마찬가지, stopwords 에 등장하는 단어를 자주 쓰는 것 역시 작가의 고유 특성이 될 수 있음 
+- 한가지의 모델로 loss를 낮추는 데에는 한계가 있다고 생각, Ensemble 기법 필요하다. 
+
+
+
+### 모델2. XGBoost
