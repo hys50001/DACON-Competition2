@@ -13,11 +13,9 @@
 ### 모델1. ANN
 
 #### STEP1: 전처리
- \~\~~ python
- def alpha_num(text):
+``` python
+def alpha_num(text):
     return re.sub(r'[^A-Za-z0-9 ]', '', text)
 
 train['text']=train['text'].apply(alpha_num)
-
- \~\~~ 
-
+```
