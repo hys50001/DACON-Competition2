@@ -2,7 +2,7 @@
 
 ![image](https://user-images.githubusercontent.com/75110162/103340444-6b0ea000-4ac7-11eb-9818-0ebbc5bcf35e.png)
 
-두번째로 참가한 DACON Competition, 대회 참가하면서 많이 배우고 좋은 결과까지 이어져 너무 기쁜 경험 
+두번째로 참가한 DACON Competition, 대회 참가하면서 많이 배우고 좋은 결과까지 이어져 뜻깉은 경험
 
 ![image](https://user-images.githubusercontent.com/75110162/103340660-fb4ce500-4ac7-11eb-80d9-666b9b1eea91.png)
 
@@ -12,10 +12,21 @@
 
 ### 모델1. ANN
 
-#### STEP1: 전처리: 문장부호 제거 
+#### STEP1-1: 전처리: 문장부호 제거 
 ``` python
 def alpha_num(text):
     return re.sub(r'[^A-Za-z0-9 ]', '', text)
 
 train['text']=train['text'].apply(alpha_num)
+```
+#### STEP1-2: 불용어 제거 
+``` python
+nltk.download('stopwords')
+eng_stopwords = set(stopwords.words("english"))
+def remove_stopwords(text):
+    final_text = []
+    for i in text.split():
+        if i.strip().lower() not in stopwords:
+            final_text.append(i.strip())
+    return " ".join(final_text)
 ```
