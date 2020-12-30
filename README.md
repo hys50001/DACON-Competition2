@@ -95,8 +95,56 @@ train['ease']=train['text'].apply(flesch_reading_ease)
 #### STEP2: Text Based Feature
 여러가지 Machine Learning Algorithm들의 결과를 Stacking 하여 loss를 줄여나갔다.
 사용한 기법은 다음과 같다.
+
 - LogisticRegression
 - SGDClassifier
 - RandomForestClassifier
 - MLPClassifier
 - DecisionTreeClassifier
+
+``` python
+tfidf_vec = TfidfVectorizer(tokenizer=word_tokenize, stop_words=stopwords.words('english'), ngram_range=(1, 3), min_df=50)
+train_tfidf = tfidf_vec.fit_transform(train['text'].values.tolist())
+test_tfidf = tfidf_vec.transform(test['text'].values.tolist())
+train_y = train['author']
+
+def runLR(train_X,train_y,test_X,test_y,test_X2):
+    model=LogisticRegression()
+    model.fit(train_X,train_y)
+    pred_test_y=model.predict_proba(test_X)
+    pred_test_y2=model.predict_proba(test_X2)
+    return pred_test_y, pred_test_y2, model
+
+
+cv_scores=[]
+cols_to_drop=['text','index']
+train_X = train.drop(cols_to_drop+['author'], axis=1)
+train_y=train['author']
+test_X = test.drop(cols_to_drop, axis=1)
+pred_train=np.zeros([train.shape[0],5])
+pred_full_test = 0
+
+cv = model_selection.StratifiedKFold(n_splits=5, shuffle=True, random_state=2020)
+
+for dev_index, val_index in cv.split(train_X,train_y):
+    dev_X, val_X = train_tfidf[dev_index], train_tfidf[val_index]
+    dev_y, val_y = train_y[dev_index], train_y[val_index]
+    pred_val_y, pred_test_y, model = runLR(dev_X, dev_y, val_X, val_y,test_tfidf)
+    pred_full_test = pred_full_test + pred_test_y
+    pred_train[val_index,:] = pred_val_y
+    cv_scores.append(metrics.log_loss(val_y, pred_val_y))
+print("Mean cv score : ", np.mean(cv_scores))
+pred_full_test = pred_full_test / 5.
+
+train["tfidf_LR_0"] = pred_train[:,0]
+train["tfidf_LR_1"] = pred_train[:,1]
+train["tfidf_LR_2"] = pred_train[:,2]
+train["tfidf_LR_3"] = pred_train[:,3]
+train["tfidf_LR_4"] = pred_train[:,4]
+test["tfidf_LR_0"] = pred_full_test[:,0]
+test["tfidf_LR_1"] = pred_full_test[:,1]
+test["tfidf_LR_2"] = pred_full_test[:,2]
+test["tfidf_LR_3"] = pred_full_test[:,3]
+test["tfidf_LR_4"] = pred_full_test[:,4]
+```
+***TFIDF vectorizer + Logistic Regression 을 활용한 Feature Stacking ***
