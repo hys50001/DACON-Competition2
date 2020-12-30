@@ -51,6 +51,6 @@ model.compile(optimizer=keras.optimizers.Adam(lr = 0.01), loss='sparse_categoric
 - stopwords 역시 마찬가지, stopwords 에 등장하는 단어를 자주 쓰는 것 역시 작가의 고유 특성이 될 수 있음 
 - 한가지의 모델로 loss를 낮추는 데에는 한계가 있다고 생각, Ensemble 기법 필요하다. 
 
-
+---------------
 
 ### 모델2. XGBoost
